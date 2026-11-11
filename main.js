@@ -98,6 +98,8 @@ function loadLevel(lvl) {
     player.y = 300;
     player.vx = 0;
     player.vy = 0;
+    player.skillCooldown = 0;
+    player.maxSkillCooldown = 60;
     arrows = [];
     damageTexts = [];
 
@@ -184,10 +186,11 @@ window.addEventListener('keydown', e => {
         if (gameState === 'PLAYING') player.jump();
     }
 
+    // CHƯỞNG LỬA PHÍM F
     if ((e.key === 'f' || e.key === 'F' || e.code === 'KeyF') && gameState === 'PLAYING') {
-        if (player.skillCooldown === 0) {
+        if (!player.skillCooldown || player.skillCooldown <= 0) {
             arrows.push(new Arrow(player.x + player.width, player.y + 10, arrowDamage));
-            player.skillCooldown = player.maxSkillCooldown;
+            player.skillCooldown = player.maxSkillCooldown || 60;
             player.castTimer = 15;
             playSound('fireball');
         }
@@ -248,13 +251,16 @@ function gameLoop() {
 
     gameTime += 1 / 60;
 
+    // Giảm hồi chiêu phím F
+    if (player.skillCooldown > 0) player.skillCooldown--;
+
     if (keys['a'] || keys['A'] || keys['ArrowLeft']) player.vx = -player.speed;
     else if (keys['d'] || keys['D'] || keys['ArrowRight']) player.vx = player.speed;
     else player.vx = 0;
 
     player.update(platforms, keys);
 
-    // --- CHỐNG RỚT OUT KHỎI MAP & GIỚI HẠN BIÊN ---
+    // CHỐNG RỚT OUT KHỎI MAP
     if (player.x < 0) player.x = 0;
     const maxMapWidth = currentLevel === 3 ? 1350 : 1950;
     if (player.x > maxMapWidth) player.x = maxMapWidth;
@@ -269,7 +275,7 @@ function gameLoop() {
 
     cameraX = Math.max(0, Math.min(player.x - 300, (currentLevel === 3 ? 1400 : 2000) - 800));
 
-    // --- CẬP NHẬT ĐẠN BẮN (SỬA LỖI HỤT DAME & LỖI AUTO DÍNH DƠI) ---
+    // CẬP NHẬT ĐẠN
     arrows.forEach(arrow => {
         arrow.update();
         enemies.forEach(enemy => {
@@ -476,12 +482,12 @@ function gameLoop() {
     
     ctx.fillStyle = '#000';
     ctx.fillRect(15, 35, 120, 8);
-    const ragePercent = 1 - (player.skillCooldown / player.maxSkillCooldown);
+    const ragePercent = Math.max(0, 1 - ((player.skillCooldown || 0) / (player.maxSkillCooldown || 60)));
     ctx.fillStyle = ragePercent >= 1 ? '#ff4500' : '#38bdf8';
     ctx.fillRect(15, 35, 120 * ragePercent, 8);
     ctx.fillStyle = '#fff';
     ctx.font = '10px Arial';
-    ctx.fillText(ragePercent >= 1 ? 'NỘ SẴN SÀNG (F)' : `HỒI NỘ: ${Math.ceil(player.skillCooldown / 60)}s`, 140, 42);
+    ctx.fillText(ragePercent >= 1 ? 'NỘ SẴN SÀNG (F)' : `HỒI NỘ: ${Math.ceil((player.skillCooldown || 0) / 60)}s`, 140, 42);
 
     if (portal && !canPortal) {
         ctx.fillStyle = '#f87171';
