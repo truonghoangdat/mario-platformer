@@ -11,7 +11,6 @@ class Arrow {
 
     update() {
         this.x += this.speed;
-        // Tự biến mất nếu đạn bay quá chiều dài map (2000px)
         if (this.x > 2000) {
             this.active = false;
         }
@@ -21,7 +20,6 @@ class Arrow {
         if (!this.active) return;
         const drawX = this.x - cameraX;
 
-        // Vẽ hiệu ứng quả cầu lửa/mũi tên đạn
         ctx.fillStyle = '#f97316';
         ctx.beginPath();
         ctx.arc(drawX + 8, this.y + 4, 6, 0, Math.PI * 2);
