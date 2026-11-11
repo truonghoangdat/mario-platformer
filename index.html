@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>2D Mario Platformer 6.0 - 5 JS Files Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="gameContainer">
+    <canvas id="gameCanvas" width="800" height="450"></canvas>
+
+    <!-- Start Overlay Screen -->
+    <div id="startScreen" class="overlay">
+        <h1 style="color: #facc15; font-size: 26px; margin-bottom: 10px;">MARIO PLATFORMER 6.0 - CỨU CÔNG CHÚA</h1>
+        <p style="margin-bottom: 6px;">Nhảy / Nhảy đôi: <b>W / Space (Nhấn 2 lần)</b> | Hạ người: <b>S</b></p>
+        <p style="margin-bottom: 6px;">Chưởng Cầu Lửa Nộ: <b>F (Thanh Nộ hồi 10s)</b> | Mở Shop: <b>B</b></p>
+        <p style="color: #38bdf8; margin-top: 8px;">💡 Mẹo: Bấm S cúi người né Dơi bay sà thấp & Xung Kích Boss!</p>
+        <button onclick="startGame()" style="margin-top: 15px;">BẮT ĐẦU CHƠI</button>
+    </div>
+
+    <!-- Shop Screen -->
+    <div id="shopScreen" class="overlay hidden">
+        <h2 style="color: #ffd700; margin-bottom: 15px;">🛒 CỬA HÀNG VẬT PHẨM</h2>
+        <p id="shopCoins" style="margin-bottom: 15px; font-size: 18px;">Vàng hiện có: 0</p>
+        <div style="display: flex; gap: 15px;">
+            <button onclick="buyItem('heal')">Mua Máu (+30 HP) - 5 Vàng</button>
+            <button onclick="buyItem('upgrade')">Tăng Sát Thương Cầu Lửa - 20 Vàng</button>
+        </div>
+        <button onclick="toggleShop()" style="background: #555; margin-top: 20px;">Đóng Shop (B)</button>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="overlay hidden">
+        <h1 style="color: #ef4444;">GAME OVER</h1>
+        <p id="finalScore" style="margin: 10px 0;">Score: 0</p>
+        <button onclick="location.reload()">Chơi Lại</button>
+    </div>
+
+    <!-- Victory Screen -->
+    <div id="victoryScreen" class="overlay hidden">
+        <h1 style="color: #22c55e;">CHÚC MỪNG CHIẾN THẮNG!</h1>
+        <p id="victoryScore" style="margin: 10px 0; white-space: pre-line;">Bạn đã giải cứu thành công Công Chúa!</p>
+        <button onclick="location.reload()">Chơi Lại Mới</button>
+    </div>
+</div>
+
+<script src="js/Platform.js"></script>
+<script src="js/Arrow.js"></script>
+<script src="js/Enemy.js"></script>
+<script src="js/Player.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
