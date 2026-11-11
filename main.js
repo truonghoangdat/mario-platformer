@@ -96,6 +96,8 @@ function loadLevel(lvl) {
     window.currentLevel = lvl;
     player.x = 50;
     player.y = 300;
+    player.vx = 0;
+    player.vy = 0;
     arrows = [];
     damageTexts = [];
 
@@ -168,7 +170,7 @@ function loadLevel(lvl) {
     }
 }
 
-// BẮT SỰ KIỆN BÀN PHÍM (BẮT TRIỆT ĐỂ CẢ KEYB, B, b)
+// BẮT SỰ KIỆN BÀN PHÍM
 window.addEventListener('keydown', e => {
     if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
         e.preventDefault();
@@ -232,7 +234,6 @@ function buyItem(type) {
     if (coinsElem) coinsElem.innerText = `Vàng hiện có: ${coins}`;
 }
 
-// HÀM BẮT ĐẦU CHƠI CHUẨN
 function startGame() {
     const startScreen = document.getElementById('startScreen');
     if (startScreen) startScreen.classList.add('hidden');
@@ -252,14 +253,31 @@ function gameLoop() {
     else player.vx = 0;
 
     player.update(platforms, keys);
+
+    // --- CHỐNG RỚT OUT KHỎI MAP & GIỚI HẠN BIÊN ---
+    if (player.x < 0) player.x = 0;
+    const maxMapWidth = currentLevel === 3 ? 1350 : 1950;
+    if (player.x > maxMapWidth) player.x = maxMapWidth;
+
+    if (player.y > 420) {
+        player.x = 50;
+        player.y = 300;
+        player.vy = 0;
+        player.hp -= 15;
+        addDamageText('-15 HP (Rơi vực)', player.x + 10, player.y - 15, '#ef4444');
+    }
+
     cameraX = Math.max(0, Math.min(player.x - 300, (currentLevel === 3 ? 1400 : 2000) - 800));
 
+    // --- CẬP NHẬT ĐẠN BẮN (SỬA LỖI HỤT DAME & LỖI AUTO DÍNH DƠI) ---
     arrows.forEach(arrow => {
         arrow.update();
         enemies.forEach(enemy => {
             if (enemy.active && arrow.active &&
-                arrow.x > enemy.x && arrow.x < enemy.x + enemy.width &&
-                arrow.y > enemy.y && arrow.y < enemy.y + enemy.height) {
+                arrow.x + 15 >= enemy.x && 
+                arrow.x <= enemy.x + enemy.width &&
+                arrow.y + 15 >= enemy.y && 
+                arrow.y <= enemy.y + enemy.height) {
                 
                 enemy.hp -= arrow.damage;
                 enemy.hitTimer = 5;
