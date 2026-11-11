@@ -2,25 +2,123 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>2D Mario Platformer 6.0 - 5 JS Files Edition</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Mario Platformer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #gameContainer {
+            position: relative;
+            width: 800px;
+            height: 450px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 3px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background-color: #38bdf8;
+        }
+        .screen-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+        }
+        .hidden { display: none !important; }
+        h1 { color: #facc15; margin-bottom: 15px; font-size: 28px; }
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background-color: #16a34a; transform: scale(1.05); }
+        
+        /* Cửa hàng Shop UI */
+        #shopScreen {
+            position: absolute;
+            top: 50px; left: 150px;
+            width: 500px; height: 320px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 3px solid #facc15;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .shop-item {
+            margin: 15px 0;
+            display: flex;
+            gap: 15px;
+        }
+        .shop-btn {
+            font-size: 14px;
+            padding: 8px 15px;
+            background-color: #0284c7;
+        }
+    </style>
 </head>
 <body>
 
 <div id="gameContainer">
     <canvas id="gameCanvas" width="800" height="450"></canvas>
 
-    <!-- Start Overlay Screen -->
-    <div id="startScreen" class="overlay">
-        <h1 style="color: #facc15; font-size: 26px; margin-bottom: 10px;">MARIO PLATFORMER 6.0 - CỨU CÔNG CHÚA</h1>
-        <p style="margin-bottom: 6px;">Nhảy / Nhảy đôi: <b>W / Space (Nhấn 2 lần)</b> | Hạ người: <b>S</b></p>
-        <p style="margin-bottom: 6px;">Chưởng Cầu Lửa Nộ: <b>F (Thanh Nộ hồi 10s)</b> | Mở Shop: <b>B</b></p>
-        <p style="color: #38bdf8; margin-top: 8px;">💡 Mẹo: Bấm S cúi người né Dơi bay sà thấp & Xung Kích Boss!</p>
-        <button onclick="startGame()" style="margin-top: 15px;">BẮT ĐẦU CHƠI</button>
+    <!-- Màn hình Start -->
+    <div id="startScreen" class="screen-overlay">
+        <h1>2D MARIO PLATFORMER 6.0</h1>
+        <button onclick="startGame()">BẮT ĐẦU CHƠI</button>
+    </div>
+
+    <!-- Màn hình Game Over -->
+    <div id="gameOverScreen" class="screen-overlay hidden">
+        <h1 style="color: #ef4444;">GAME OVER</h1>
+        <p id="finalScore" style="margin-bottom: 15px;"></p>
+        <button onclick="location.reload()">CHƠI LẠI</button>
+    </div>
+
+    <!-- Màn hình Victory -->
+    <div id="victoryScreen" class="screen-overlay hidden">
+        <h1 style="color: #4ade80;">CHÚC MỪNG CHIẾN THẮNG!</h1>
+        <p id="victoryScore" style="margin-bottom: 15px; text-align: center;"></p>
+        <button onclick="location.reload()">CHƠI LẠI</button>
+    </div>
+
+    <!-- Giao diện Cửa hàng (Shop) -->
+    <div id="shopScreen" class="hidden">
+        <h2 style="color: #facc15; margin-bottom: 10px;">--- CỬA HÀNG (SHOP) ---</h2>
+        <p id="shopCoins" style="margin-bottom: 15px;">Vàng hiện có: 0</p>
+        <div class="shop-item">
+            <button class="shop-btn" onclick="buyItem('heal')">Mua +30 HP (5 Vàng)</button>
+            <button class="shop-btn" onclick="buyItem('upgrade')">Tăng +15 Sát Thương (20 Vàng)</button>
+        </div>
+        <p style="font-size: 13px; color: #94a3b8; margin-top: 20px;">💡 Bấm phím <b>B</b> trên bàn phím để Đóng/Mở Shop</p>
     </div>
 </div>
 
-<!-- Load các file JS trực tiếp không qua thư mục js/ -->
+<!-- NHÚNG FILE JS THEO ĐÚNG THỨ TỰ CHUẨN -->
 <script src="Platform.js"></script>
 <script src="Arrow.js"></script>
 <script src="Player.js"></script>
