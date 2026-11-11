@@ -168,9 +168,8 @@ function loadLevel(lvl) {
     }
 }
 
-// BẮT SỰ KIỆN BÀN PHÍM (ĐÃ CHỈNH TRIỆT ĐỂ CHO PHÍM B MỞ SHOP)
+// BẮT SỰ KIỆN BÀN PHÍM (BẮT TRIỆT ĐỂ CẢ KEYB, B, b)
 window.addEventListener('keydown', e => {
-    // Chống cuộn trang khi nhấn Space hoặc phím mũi tên
     if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
         e.preventDefault();
     }
@@ -233,11 +232,13 @@ function buyItem(type) {
     if (coinsElem) coinsElem.innerText = `Vàng hiện có: ${coins}`;
 }
 
+// HÀM BẮT ĐẦU CHƠI CHUẨN
 function startGame() {
     const startScreen = document.getElementById('startScreen');
     if (startScreen) startScreen.classList.add('hidden');
     loadLevel(1);
     gameState = 'PLAYING';
+    gameTime = 0;
     requestAnimationFrame(gameLoop);
 }
 
