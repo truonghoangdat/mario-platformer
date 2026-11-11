@@ -18,37 +18,14 @@
         <p style="color: #38bdf8; margin-top: 8px;">💡 Mẹo: Bấm S cúi người né Dơi bay sà thấp & Xung Kích Boss!</p>
         <button onclick="startGame()" style="margin-top: 15px;">BẮT ĐẦU CHƠI</button>
     </div>
-
-    <!-- Shop Screen -->
-    <div id="shopScreen" class="overlay hidden">
-        <h2 style="color: #ffd700; margin-bottom: 15px;">🛒 CỬA HÀNG VẬT PHẨM</h2>
-        <p id="shopCoins" style="margin-bottom: 15px; font-size: 18px;">Vàng hiện có: 0</p>
-        <div style="display: flex; gap: 15px;">
-            <button onclick="buyItem('heal')">Mua Máu (+30 HP) - 5 Vàng</button>
-            <button onclick="buyItem('upgrade')">Tăng Sát Thương Cầu Lửa - 20 Vàng</button>
-        </div>
-        <button onclick="toggleShop()" style="background: #555; margin-top: 20px;">Đóng Shop (B)</button>
-    </div>
-
-    <!-- Game Over Screen -->
-    <div id="gameOverScreen" class="overlay hidden">
-        <h1 style="color: #ef4444;">GAME OVER</h1>
-        <p id="finalScore" style="margin: 10px 0;">Score: 0</p>
-        <button onclick="location.reload()">Chơi Lại</button>
-    </div>
-
-    <!-- Victory Screen -->
-    <div id="victoryScreen" class="overlay hidden">
-        <h1 style="color: #22c55e;">CHÚC MỪNG CHIẾN THẮNG!</h1>
-        <p id="victoryScore" style="margin: 10px 0; white-space: pre-line;">Bạn đã giải cứu thành công Công Chúa!</p>
-        <button onclick="location.reload()">Chơi Lại Mới</button>
-    </div>
 </div>
 
-<script src="js/Platform.js"></script>
-<script src="js/Arrow.js"></script>
-<script src="js/Enemy.js"></script>
-<script src="js/Player.js"></script>
-<script src="js/main.js"></script>
+<!-- Load các file JS trực tiếp không qua thư mục js/ -->
+<script src="Platform.js"></script>
+<script src="Arrow.js"></script>
+<script src="Player.js"></script>
+<script src="Enemy.js"></script>
+<script src="main.js"></script>
+
 </body>
 </html>
