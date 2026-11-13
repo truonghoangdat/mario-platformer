@@ -89,9 +89,18 @@ class Enemy {
             ctx.fillStyle = '#fef08a';
             ctx.fillRect(this.dir === 1 ? drawX + 80 : drawX + 10, this.y + 8, 10, 8);
 
+            // Chưởng sóng kiếm của Boss (Màu đỏ rực + lõi vàng + viền trắng nổi bật cả ngày lẫn đêm)
             if (this.slashWave && this.slashWave.active) {
-                ctx.fillStyle = '#38bdf8';
-                ctx.fillRect(this.slashWave.x - cameraX, this.slashWave.y, this.slashWave.width, this.slashWave.height);
+                const waveX = this.slashWave.x - cameraX;
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(waveX, this.slashWave.y, this.slashWave.width, this.slashWave.height);
+                
+                ctx.fillStyle = '#fde047';
+                ctx.fillRect(waveX + 6, this.slashWave.y + 6, this.slashWave.width - 12, this.slashWave.height - 12);
+                
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(waveX, this.slashWave.y, this.slashWave.width, this.slashWave.height);
             }
         } else if (this.isBat) {
             // Quái Dơi Bay
