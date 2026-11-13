@@ -19,7 +19,7 @@ class Player {
         this.maxJumps = 2;
 
         this.skillCooldown = 0;
-        this.maxSkillCooldown = 600;
+        this.maxSkillCooldown = 45;
         this.castTimer = 0;
     }
 
