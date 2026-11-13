@@ -62,6 +62,7 @@ window.currentLevel = 1;
 let gameState = 'MENU';
 let cameraX = 0;
 let gameTime = 0;
+let currentMapWidth = 3200;
 
 let platforms = [];
 let enemies = [];
@@ -104,71 +105,140 @@ function loadLevel(lvl) {
     damageTexts = [];
 
     if (lvl === 1) {
+        currentMapWidth = 3200;
         platforms = [
-            new Platform(0, 380, 2000, 70),
+            new Platform(0, 380, 3200, 70),
             new Platform(180, 280, 200, 18),
             new Platform(440, 210, 200, 18),
             new Platform(720, 280, 200, 18),
             new Platform(1000, 210, 200, 18),
-            new Platform(1280, 280, 200, 18),
-            new Platform(1560, 210, 200, 18)
+            new Platform(1280, 280, 220, 18),
+            new Platform(1580, 200, 220, 18),
+            new Platform(1880, 270, 220, 18),
+            new Platform(2180, 190, 220, 18),
+            new Platform(2480, 270, 220, 18),
+            new Platform(2780, 210, 200, 18)
         ];
         enemies = [
             new Enemy(220, 248, 190, 360, 'goomba'),
             new Enemy(740, 248, 730, 900, 'goomba'),
             new Enemy(1020, 178, 1010, 1180, 'goomba'),
-            new Enemy(1580, 178, 1570, 1740, 'goomba')
+            new Enemy(1320, 248, 1300, 1480, 'goomba'),
+            new Enemy(1620, 168, 1600, 1780, 'goomba'),
+            new Enemy(2220, 158, 2200, 2380, 'goomba'),
+            new Enemy(2520, 238, 2500, 2680, 'goomba')
         ];
         items = [
             { type: 'coin', x: 250, y: 240, active: true },
             { type: 'coin', x: 500, y: 170, active: true },
             { type: 'coin', x: 1050, y: 170, active: true },
-            { type: 'heal', x: 1330, y: 240, active: true }
+            { type: 'heal', x: 1350, y: 240, active: true },
+            { type: 'coin', x: 1650, y: 160, active: true },
+            { type: 'coin', x: 2250, y: 150, active: true },
+            { type: 'heal', x: 2550, y: 230, active: true },
+            { type: 'coin', x: 2850, y: 170, active: true }
         ];
-        portal = new Platform(1900, 310, 45, 70, true);
+        portal = new Platform(3080, 310, 45, 70, true);
         princess = null;
 
     } else if (lvl === 2) {
+        currentMapWidth = 3200;
         platforms = [
-            new Platform(0, 380, 2000, 70),
+            new Platform(0, 380, 3200, 70),
             new Platform(180, 290, 180, 18),
-            new Platform(400, 220, 180, 18),
-            new Platform(640, 170, 180, 18),
-            new Platform(920, 260, 180, 18),
-            new Platform(1220, 210, 180, 18),
-            new Platform(1520, 270, 180, 18)
+            new Platform(420, 220, 180, 18),
+            new Platform(680, 170, 180, 18),
+            new Platform(960, 260, 200, 18),
+            new Platform(1260, 210, 200, 18),
+            new Platform(1560, 270, 200, 18),
+            new Platform(1860, 190, 200, 18),
+            new Platform(2160, 260, 200, 18),
+            new Platform(2460, 180, 200, 18),
+            new Platform(2760, 250, 200, 18)
         ];
         enemies = [
             new Enemy(200, 258, 190, 340, 'goomba'),
-            new Enemy(420, 330, 380, 560, 'bat'),  
-            new Enemy(940, 330, 900, 1080, 'bat'), 
-            new Enemy(1240, 178, 1230, 1380, 'goomba'),
-            new Enemy(1540, 330, 1500, 1680, 'bat')
+            new Enemy(440, 330, 380, 620, 'bat'),
+            new Enemy(980, 330, 920, 1160, 'bat'),
+            new Enemy(1280, 178, 1270, 1440, 'goomba'),
+            new Enemy(1580, 330, 1520, 1760, 'bat'),
+            new Enemy(1880, 158, 1870, 2040, 'goomba'),
+            new Enemy(2180, 330, 2120, 2360, 'bat'),
+            new Enemy(2480, 148, 2470, 2640, 'goomba'),
+            new Enemy(2780, 330, 2720, 2960, 'bat')
         ];
         items = [
             { type: 'coin', x: 230, y: 250, active: true },
-            { type: 'coin', x: 440, y: 180, active: true },
-            { type: 'coin', x: 680, y: 130, active: true },
-            { type: 'coin', x: 1260, y: 170, active: true },
-            { type: 'heal', x: 1560, y: 230, active: true }
+            { type: 'coin', x: 460, y: 180, active: true },
+            { type: 'coin', x: 720, y: 130, active: true },
+            { type: 'coin', x: 1300, y: 170, active: true },
+            { type: 'heal', x: 1620, y: 230, active: true },
+            { type: 'coin', x: 1920, y: 150, active: true },
+            { type: 'coin', x: 2520, y: 140, active: true },
+            { type: 'heal', x: 2820, y: 210, active: true }
         ];
-        portal = new Platform(1900, 310, 45, 70, true);
+        portal = new Platform(3080, 310, 45, 70, true);
         princess = null;
 
     } else if (lvl === 3) {
+        currentMapWidth = 3200;
         platforms = [
-            new Platform(0, 380, 1400, 70),
-            new Platform(250, 270, 220, 18),
-            new Platform(650, 270, 220, 18)
+            new Platform(0, 380, 3200, 70),
+            new Platform(200, 280, 200, 18),
+            new Platform(480, 200, 200, 18),
+            new Platform(780, 270, 220, 18),
+            new Platform(1100, 190, 220, 18),
+            new Platform(1420, 270, 220, 18),
+            new Platform(1740, 180, 220, 18),
+            new Platform(2060, 260, 220, 18),
+            new Platform(2380, 190, 220, 18),
+            new Platform(2700, 260, 220, 18)
         ];
         enemies = [
-            new Enemy(750, 290, 550, 1100, 'boss')
+            new Enemy(220, 248, 210, 380, 'goomba'),
+            new Enemy(500, 330, 440, 700, 'bat'),
+            new Enemy(800, 238, 790, 980, 'goomba'),
+            new Enemy(1120, 158, 1110, 1300, 'goomba'),
+            new Enemy(1440, 330, 1380, 1660, 'bat'),
+            new Enemy(1760, 148, 1750, 1940, 'goomba'),
+            new Enemy(2080, 330, 2020, 2300, 'bat'),
+            new Enemy(2400, 158, 2390, 2580, 'goomba'),
+            new Enemy(2720, 330, 2660, 2940, 'bat'),
+            new Enemy(2740, 228, 2710, 2900, 'goomba')
         ];
         items = [
-            { type: 'heal', x: 300, y: 230, active: true }
+            { type: 'coin', x: 260, y: 240, active: true },
+            { type: 'coin', x: 540, y: 160, active: true },
+            { type: 'heal', x: 840, y: 230, active: true },
+            { type: 'coin', x: 1160, y: 150, active: true },
+            { type: 'coin', x: 1800, y: 140, active: true },
+            { type: 'heal', x: 2120, y: 220, active: true },
+            { type: 'coin', x: 2440, y: 150, active: true },
+            { type: 'coin', x: 2780, y: 220, active: true }
+        ];
+        portal = new Platform(3080, 310, 45, 70, true);
+        princess = null;
+
+    } else if (lvl === 4) {
+        currentMapWidth = 2200;
+        platforms = [
+            new Platform(0, 380, 2200, 70),
+            new Platform(220, 270, 220, 18),
+            new Platform(620, 270, 220, 18),
+            new Platform(1050, 260, 240, 18),
+            new Platform(1480, 270, 220, 18)
+        ];
+        enemies = [
+            new Enemy(450, 330, 350, 650, 'bat'),
+            new Enemy(1150, 290, 850, 1650, 'boss')
+        ];
+        items = [
+            { type: 'heal', x: 280, y: 230, active: true },
+            { type: 'coin', x: 680, y: 230, active: true },
+            { type: 'heal', x: 1540, y: 230, active: true }
         ];
         portal = null;
-        princess = { x: 1250, y: 340, active: true };
+        princess = { x: 2020, y: 340, active: true };
     }
 }
 
@@ -251,7 +321,6 @@ function gameLoop() {
 
     gameTime += 1 / 60;
 
-    // Giảm hồi chiêu phím F
     if (player.skillCooldown > 0) player.skillCooldown--;
 
     if (keys['a'] || keys['A'] || keys['ArrowLeft']) player.vx = -player.speed;
@@ -260,10 +329,10 @@ function gameLoop() {
 
     player.update(platforms, keys);
 
-    // CHỐNG RỚT OUT KHỎI MAP
+    // CHỐNG RỚT OUT KHỎI MAP THEO ĐỘ DÀI TỪNG MÀN
     if (player.x < 0) player.x = 0;
-    const maxMapWidth = currentLevel === 3 ? 1350 : 1950;
-    if (player.x > maxMapWidth) player.x = maxMapWidth;
+    const maxPlayableX = currentMapWidth - 50;
+    if (player.x > maxPlayableX) player.x = maxPlayableX;
 
     if (player.y > 420) {
         player.x = 50;
@@ -273,11 +342,12 @@ function gameLoop() {
         addDamageText('-15 HP (Rơi vực)', player.x + 10, player.y - 15, '#ef4444');
     }
 
-    cameraX = Math.max(0, Math.min(player.x - 300, (currentLevel === 3 ? 1400 : 2000) - 800));
+    cameraX = Math.max(0, Math.min(player.x - 300, currentMapWidth - 800));
 
-    // CẬP NHẬT ĐẠN
+    // CẬP NHẬT ĐẠN (TỰ XÓA KHI BAY QUÁ MAP DÀI)
     arrows.forEach(arrow => {
         arrow.update();
+        if (arrow.x > currentMapWidth) arrow.active = false;
         enemies.forEach(enemy => {
             if (enemy.active && arrow.active &&
                 arrow.x + 15 >= enemy.x && 
@@ -371,7 +441,7 @@ function gameLoop() {
         loadLevel(currentLevel + 1);
     }
 
-    if (currentLevel === 3 && allEnemiesDead && princess && player.x + player.width > princess.x) {
+    if (currentLevel === 4 && allEnemiesDead && princess && player.x + player.width > princess.x) {
         gameState = 'VICTORY';
         const vicScreen = document.getElementById('victoryScreen');
         if (vicScreen) vicScreen.classList.remove('hidden');
@@ -430,7 +500,7 @@ function gameLoop() {
     }
 
     ctx.fillStyle = '#065f46';
-    for (let treeX = 100; treeX < 2000; treeX += 250) {
+    for (let treeX = 100; treeX < currentMapWidth; treeX += 250) {
         const drawTreeX = treeX - cameraX * 0.5;
         ctx.fillRect(drawTreeX + 15, 330, 10, 50);
         ctx.beginPath();
@@ -478,7 +548,7 @@ function gameLoop() {
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 14px Arial';
     let shopHint = coins >= 5 ? ' (ĐỦ MUA MÁU!)' : ` (${coins}/5 Vàng)`;
-    ctx.fillText(`Màn: ${currentLevel} | HP: ${player.hp} | Vàng: ${coins}${shopHint} | S: Cúi | F: Chưởng Lửa | B: Shop`, 15, 25);
+    ctx.fillText(`Màn: ${currentLevel}/4 | HP: ${player.hp} | Vàng: ${coins}${shopHint} | S: Cúi | F: Chưởng Lửa | B: Shop`, 15, 25);
     
     ctx.fillStyle = '#000';
     ctx.fillRect(15, 35, 120, 8);
