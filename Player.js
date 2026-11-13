@@ -42,7 +42,7 @@ class Player {
         if (this.skillCooldown > 0) this.skillCooldown--;
         if (this.castTimer > 0) this.castTimer--;
 
-        if ((keys['s'] || keys['S'] || keys['ArrowDown']) && this.isGrounded) {
+        if ((keys['s'] || keys['S'] || keys['KeyS'] || keys['ArrowDown']) && this.isGrounded) {
             if (!this.isCrouching) {
                 this.y += (this.normalHeight - this.crouchHeight);
             }
@@ -63,9 +63,9 @@ class Player {
         platforms.forEach(p => {
             if (!p.isPortal && 
                 this.x + this.width > p.x && 
-                this.x < p.x + p.width &&
-                this.y + this.height >= p.y &&
-                this.y + this.height <= p.y + 14 &&
+                this.x < p.x + p.width && 
+                this.y + this.height >= p.y && 
+                this.y + this.height <= p.y + 14 && 
                 this.vy >= 0) {
                 this.y = p.y - this.height;
                 this.vy = 0;
@@ -75,7 +75,7 @@ class Player {
         });
 
         if (this.x < 0) this.x = 0;
-        const currentMapMax = (window.currentLevel === 3 ? 1400 : 2000);
+        const currentMapMax = (window.currentLevel === 4 ? 2200 : 3200);
         if (this.x + this.width > currentMapMax) this.x = currentMapMax - this.width;
 
         if (this.invincibleTimer > 0) this.invincibleTimer--;
