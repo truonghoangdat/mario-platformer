@@ -1,195 +1,21 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mini Mario Action</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
-    body {
-      background-color: #0d1321;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      overflow: hidden;
-    }
-    #game-container {
-      position: relative;
-      border: 3px solid #334155;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-    }
-    canvas {
-      display: block;
-      background-color: #29b6f6;
-      outline: none;
-    }
-    /* Shop & Overlay Modal */
-    #overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(13, 19, 33, 0.85);
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-    }
-    #overlay h2 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #facc15;
-    }
-    #overlay p {
-      font-size: 16px;
-      margin-bottom: 20px;
-      color: #cbd5e1;
-    }
-    .shop-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-      width: 90%;
-      max-width: 650px;
-    }
-    .shop-item {
-      background: #1e293b;
-      border: 2px solid #475569;
-      border-radius: 8px;
-      padding: 14px;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-    .shop-item:hover {
-      border-color: #facc15;
-      transform: translateY(-2px);
-    }
-    .shop-item h3 {
-      font-size: 16px;
-      color: #38bdf8;
-      margin-bottom: 6px;
-    }
-    .shop-item span {
-      display: inline-block;
-      margin-top: 8px;
-      font-weight: bold;
-      color: #facc15;
-    }
-    .btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background: #dc2626;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Mario Platformer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="game-container">
-    <canvas id="gameCanvas" width="960" height="500" tabindex="0"></canvas>
-    <div id="overlay"></div>
-  </div>
+    <div id="gameContainer" style="position: relative; width: 800px; height: 450px; margin: 40px auto;">
+        <canvas id="gameCanvas" width="800" height="450" style="display: block; border: 2px solid #334155; border-radius: 8px;"></canvas>
 
-  <script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const overlay = document.getElementById('overlay');
+        <!-- Màn hình Bắt đầu -->
+        <div id="startScreen" style="position: absolute; inset: 0; background: rgba(15, 23, 42, 0.88); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; text-align: center;">
+            <h1 style="font-size: 36px; margin-bottom: 10px; color: #facc15;">2D MARIO PLATFORMER</h1>
+            <p style="margin-bottom: 20px; color: #cbd5e1;">A / D: Di chuyển | W / Space: Nhảy | S: Cúi | F: Chưởng Lửa | B: Cửa Hàng</p>
+            <button onclick="startGame()" style="padding: 12px 28px; font-size: 18px; font-weight: bold; background: #22c55e; color: #fff; border: none; border-radius: 6px; cursor: pointer;">BẮT ĐẦU CHƠI</button>
+        </div>
 
-    // Tự động focus vào canvas để nhận phím ngay lập tức
-    window.addEventListener('load', () => canvas.focus());
-    canvas.addEventListener('click', () => canvas.focus());
-
-    // Trạng thái phím bấm (dùng e.code để không bao giờ bị lỗi UniKey hay CapsLock)
-    const keys = {};
-    window.addEventListener('keydown', (e) => {
-      if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
-        e.preventDefault();
-      }
-      keys[e.code] = true;
-
-      if (e.code === 'KeyB' && gameState === 'PLAYING') {
-        toggleShop();
-      } else if (e.code === 'KeyB' && gameState === 'SHOP') {
-        closeOverlay();
-      }
-
-      if (e.code === 'KeyF' && gameState === 'PLAYING') {
-        shootFireball();
-      }
-    });
-
-    window.addEventListener('keyup', (e) => {
-      keys[e.code] = false;
-    });
-
-    // Biến toàn cục của game
-    let gameState = 'PLAYING'; // PLAYING, SHOP, GAMEOVER, VICTORY
-    let currentLevel = 1;
-    const maxLevels = 4;
-
-    const player = {
-      x: 340,
-      y: 280,
-      w: 32,
-      h: 48,
-      normalH: 48,
-      crouchH: 30,
-      vx: 0,
-      vy: 0,
-      speed: 4.5,
-      jumpPower: -12.5,
-      grounded: false,
-      crouching: false,
-      facing: 1, // 1: phải, -1: trái
-      hp: 100,
-      maxHp: 100,
-      gold: 0,
-      rage: 100, // Thanh Nộ (0 - 100)
-      fireDamage: 25,
-      invulnTimer: 0
-    };
-
-    const gravity = 0.55;
-    let platforms = [];
-    let enemies = [];
-    let coins = [];
-    let fireballs = [];
-    let portal = null;
-
-    // Dữ liệu 4 màn chơi
-    const levelConfigs = [
-      // Màn 1 (Giống hệt bố cục trong ảnh)
-      {
-        spawn: { x: 355, y: 290 },
-        platforms: [
-          { x: 0, y: 465, w: 960, h: 35, isGround: true },
-          { x: 0, y: 270, w: 150, h: 18 },
-          { x: 245, y: 350, w: 265, h: 18 },
-          { x: 620, y: 255, w: 255, h: 18 }
-        ],
-        enemies: [
-          { x: 95, y: 234, minX: 15, maxX: 115, hp: 50, maxHp: 50, speed: 1.2 },
-          { x: 805, y: 219, minX: 635, maxX: 835, hp: 50, maxHp: 50, speed: 1.4 }
-        ],
-        coins: [
-          { x: 695, y: 215 },
-          { x: 50, y: 230 },
-          { x: 180, y: 425 },
-          { x: 540, y: 425
+        <!-- Màn hình Cửa Hàng (Phím B) -->
+        <div id="shopScreen" class="hidden" style="position: absolute; inset: 0; background: rgba
