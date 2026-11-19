@@ -4,16 +4,18 @@ class Player {
         this.y = y;
         this.width = 30;
         this.normalHeight = 42;
-        this.crouchHeight = 18;
+        this.crouchHeight = 20;
         this.height = this.normalHeight;
         this.vx = 0;
         this.vy = 0;
-        this.speed = 3.8;
-        this.jumpPower = -10.2;
+        this.speed = 2.8;
+        this.jumpPower = -9.6;
         this.hp = 100;
+        this.maxHp = 100;
         this.isGrounded = false;
         this.isCrouching = false;
         this.invincibleTimer = 0;
+        this.facing = 1; // 1: quay phải, -1: quay trái
         
         this.jumpCount = 0;
         this.maxJumps = 2;
@@ -21,6 +23,7 @@ class Player {
         this.skillCooldown = 0;
         this.maxSkillCooldown = 45;
         this.castTimer = 0;
+        this.walkTimer = 0;
     }
 
     jump() {
@@ -37,10 +40,20 @@ class Player {
     }
 
     update(platforms, keys) {
-        this.vy += 0.38;
+        this.vy += 0.36;
 
         if (this.skillCooldown > 0) this.skillCooldown--;
         if (this.castTimer > 0) this.castTimer--;
+
+        if (this.vx > 0) {
+            this.facing = 1;
+            this.walkTimer++;
+        } else if (this.vx < 0) {
+            this.facing = -1;
+            this.walkTimer++;
+        } else {
+            this.walkTimer = 0;
+        }
 
         if ((keys['s'] || keys['S'] || keys['KeyS'] || keys['ArrowDown']) && this.isGrounded) {
             if (!this.isCrouching) {
@@ -84,33 +97,67 @@ class Player {
     draw(ctx, cameraX) {
         if (this.invincibleTimer % 4 > 2) return;
         const drawX = this.x - cameraX;
+        const stepOffset = (this.isGrounded && Math.abs(this.vx) > 0) ? Math.sin(this.walkTimer * 0.35) * 3 : 0;
 
         if (this.isCrouching) {
+            // Mũ đỏ
             ctx.fillStyle = '#dc2626';
-            ctx.fillRect(drawX, this.y, 30, 6);
-            ctx.fillStyle = '#fde047';
-            ctx.fillRect(drawX + 4, this.y + 6, 22, 5);
-            ctx.fillStyle = '#2563eb';
-            ctx.fillRect(drawX + 2, this.y + 11, 26, 7);
-        } else {
-            ctx.fillStyle = '#2563eb';
-            ctx.fillRect(drawX + 5, this.y + 20, 20, 16);
-            ctx.fillStyle = '#dc2626';
-            ctx.fillRect(drawX + 3, this.y + 12, 24, 10);
-            
-            if (this.castTimer > 0) {
-                ctx.fillStyle = '#ff4500';
-                ctx.fillRect(drawX + 26, this.y + 10, 14, 8);
-            }
-
-            ctx.fillStyle = '#fde047';
-            ctx.fillRect(drawX + 5, this.y + 5, 20, 9);
-            ctx.fillStyle = '#dc2626';
-            ctx.fillRect(drawX + 3, this.y, 24, 6);
-            ctx.fillRect(drawX + (this.vx >= 0 ? 12 : 0), this.y + 4, 16, 3);
-            ctx.fillStyle = '#78350f';
-            ctx.fillRect(drawX, this.y + 36, 12, 6);
-            ctx.fillRect(drawX + 18, this.y + 36, 12, 6);
+            ctx.fillRect(drawX + 2, this.y, 26, 6);
+            // Mặt
+            ctx.fillStyle = '#fed7aa';
+            ctx.fillRect(drawX + 5, this.y + 6, 20, 6);
+            // Mắt
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(this.facing === 1 ? drawX + 19 : drawX + 8, this.y + 7, 3, 3);
+            // Quần yếm xanh
+            ctx.fillStyle = '#1d4ed8';
+            ctx.fillRect(drawX + 3, this.y + 12, 24, 8);
+            return;
         }
+
+        // Áo đỏ bên trong
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(drawX + 4, this.y + 14, 22, 12);
+
+        // Quần yếm xanh dương + khuy vàng
+        ctx.fillStyle = '#1d4ed8';
+        ctx.fillRect(drawX + 6, this.y + 20, 18, 16);
+        ctx.fillStyle = '#facc15';
+        ctx.fillRect(drawX + 8, this.y + 21, 3, 3);
+        ctx.fillRect(drawX + 19, this.y + 21, 3, 3);
+
+        // Tay & Găng tay trắng (vươn ra khi tung chưởng lửa)
+        ctx.fillStyle = '#ffffff';
+        if (this.castTimer > 0) {
+            const handX = this.facing === 1 ? drawX + 24 : drawX - 6;
+            ctx.fillRect(handX, this.y + 15, 10, 6);
+            ctx.fillStyle = '#f97316';
+            ctx.fillRect(this.facing === 1 ? handX + 8 : handX - 6, this.y + 14, 8, 8);
+        } else {
+            ctx.fillRect(drawX + 2, this.y + 22 - stepOffset * 0.5, 5, 5);
+            ctx.fillRect(drawX + 23, this.y + 22 + stepOffset * 0.5, 5, 5);
+        }
+
+        // Đầu & Khuôn mặt
+        ctx.fillStyle = '#fed7aa';
+        ctx.fillRect(drawX + 6, this.y + 5, 18, 10);
+        // Tóc nâu sau gáy
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(this.facing === 1 ? drawX + 5 : drawX + 21, this.y + 6, 4, 7);
+        // Mắt & Ria mép
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(this.facing === 1 ? drawX + 18 : drawX + 9, this.y + 7, 3, 3);
+        ctx.fillStyle = '#451a03';
+        ctx.fillRect(this.facing === 1 ? drawX + 16 : drawX + 7, this.y + 12, 7, 2);
+
+        // Mũ lưỡi trai đỏ
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(drawX + 4, this.y, 22, 5);
+        ctx.fillRect(this.facing === 1 ? drawX + 12 : drawX, this.y + 3, 18, 3);
+
+        // Giày nâu chuyển động bước chân
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(drawX + 2 + stepOffset, this.y + 36, 11, 6);
+        ctx.fillRect(drawX + 17 - stepOffset, this.y + 36, 11, 6);
     }
 }
